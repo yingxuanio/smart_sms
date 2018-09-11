@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    smart_sms (0.1.1)
+    yx-smart_sms (0.1.2)
       activerecord (>= 3.0)
-      activesupport (>= 3.0, < 5.0)
+      activesupport (>= 3.0)
 
 GEM
   remote: https://rubygems.org/
@@ -137,9 +137,9 @@ DEPENDENCIES
   rspec-its (>= 1.0.0)
   rspec-rails (>= 3.0.0)
   sdoc
-  smart_sms!
   sqlite3
   webmock (~> 1.17.0)
+  yx-smart_sms!
 
 BUNDLED WITH
    1.15.4

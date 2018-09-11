@@ -24,7 +24,7 @@ SmartSMS
 
 ### 或者从 `github` 安装最新的开发版本
 
-    git clone http://github.com/lyfeyaj/smart_sms.git
+    git clone http://github.com/yingxuanio/smart_sms.git
     cd smart_sms
     rake install
 
@@ -78,7 +78,7 @@ end
 class User < ActiveRecord::Base
   # 在您的Model里面声明这个方法, 以添加SMS短信验证功能
   # moible_column:       mobile 绑定的字段, 用于获取发送短信所需的手机号码, 默认是 :phone
-  # verification_column: 验证绑定的字段, 用于判断是否已验证, 
+  # verification_column: 验证绑定的字段, 用于判断是否已验证,
   #
   # Options:
   #   :class_name   自定义的Message类名称. 默认是 `SmartSMS::Message`
@@ -88,27 +88,27 @@ class User < ActiveRecord::Base
 end
 
 # 发送短信验证码
-user.deliver # 将会生成一个随机的验证码发送至手机, 并保存在messages表中
-user.deliver '内容' # 可以发送指定内容至手机
+user.send_sms # 将会生成一个随机的验证码发送至手机, 并保存在messages表中
+user.send_sms('内容') # 可以发送指定内容至手机
 
 # 查询历史短信记录
-user.messages
+user.sms_messages
 
 # 查询是否已经验证
-user.verified? # ture : false
+user.mobile_verified? # ture : false
 
 # 校验验证码
-user.verify '123456'  # 返回 true 或者 false, 不修改数据库的 verified_at 关联字段
-user.verify! '123456' # 返回 true 或者 false, 同时修改数据库的 verified_at 关联字段为当前时间
+user.mobile_verify '123456'  # 返回 true 或者 false, 不修改数据库的 verified_at 关联字段
+user.mobile_verify! '123456' # 返回 true 或者 false, 同时修改数据库的 verified_at 关联字段为当前时间
 
 # 查询验证日期
-user.verified_at
+user.mobile_verified_at
 
 # 查询最新的一条有效短信记录
-user.latest_message # 返回有效期内的最近一条短信, 若无则返回nil
+user.latest_sms_message # 返回有效期内的最近一条短信, 若无则返回nil
 
 # 发送假信息, 方便非国内用户测试用
-user.deliver_fake_sms # messages中会保存一条新的短信记录, 但是不会发送短信到手机
+user.send_fake_sms_code # messages中会保存一条新的短信记录, 但是不会发送短信到手机
 ```
 
 ### 基本用法(不依赖Rails)
@@ -278,6 +278,6 @@ SmartSMS::VerificationCode.complex # => "x+rkag6a"
 
 ## 作者
 
-[Felix Liu](https://github.com/lyfeyaj) 
+[Felix Liu](https://github.com/lyfeyaj)
 
 [作者博客](http://lyfeyaj.com)

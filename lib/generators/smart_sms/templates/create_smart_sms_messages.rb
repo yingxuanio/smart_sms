@@ -3,7 +3,7 @@ class CreateSmartSmsMessages < ActiveRecord::Migration
     create_table :smart_sms_messages do |t|
       t.string :sid
       t.string :mobile
-      t.datetime :send_time
+      t.datetime :sent_at
       t.text :text
       t.string :code
       t.string :send_status
