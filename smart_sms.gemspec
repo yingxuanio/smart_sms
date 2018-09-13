@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'smart_sms/version'
 
 Gem::Specification.new do |s|
-  s.name          = 'yx-smart_sms'
+  s.name          = 'smart_sms'
   s.version       = SmartSMS::VERSION
   s.authors       = ['lyfeyaj']
   s.email         = ['lyfeyaj@gmail.com']
