@@ -35,7 +35,7 @@ module SmartSMS
 
   configure do |config|
     config.api_key                     = nil
-    config.api_version                 = :v1
+    config.api_version                 = :v2
     config.template_id                 = '2'
     config.template_value              = [:code, :company]
     config.page_num                    = 1

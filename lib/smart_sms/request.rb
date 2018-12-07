@@ -40,7 +40,7 @@ module SmartSMS
 
     # Base uri for yunpian API
     def base_url
-      "http://yunpian.com/#{SmartSMS.config.api_version}/"
+      "http://sms.yunpian.com/#{SmartSMS.config.api_version}/"
     end
 
     module_function :post, :get, :result, :base_url

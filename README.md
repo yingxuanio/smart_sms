@@ -1,14 +1,12 @@
 SmartSMS
 ========
-[![Build Status](https://travis-ci.org/lyfeyaj/smart_sms.svg?branch=master)](https://travis-ci.org/lyfeyaj/smart_sms)
-[![Code Climate](https://codeclimate.com/github/lyfeyaj/smart_sms/badges/gpa.svg)](https://codeclimate.com/github/lyfeyaj/smart_sms)
 
 提供在中国境内发送短信([云片网络](http://www.yunpian.com)), 校验, 集成 ActiveRecord
 
 功能特点
 --------
 
-* 集成了 [云片网络](http://www.yunpian.com) 的所有短信服务API
+* 集成了 [云片网络](https://www.yunpian.com) 的所有短信服务API
   - 发送, 查询模板短信, 通用短信
   - 查询, 修改用户信息
   - 查询默认模板, 自定义模板
@@ -58,12 +56,12 @@ rake db:migrate
 ``` ruby
 SmartSMS.configure do |config|
   config.api_key = nil # 授权 API KEY
-  config.api_version = :v1 # API 的版本, 当前仅有v1
+  config.api_version = :v2 # API 的版本, 当前仅有v2
   config.template_id = '2' # 指定发送信息时使用的模板
   config.template_value = [:code, :company] # 用于指定信息文本中的可替换内容, 数组形势: [:code, :company]
   config.page_num = 1 # 获取信息时, 指定默认的页数
   config.page_size = 20 # 获取信息时, 一页包含信息数量
-  config.company = '云片网' # 默认公司名称
+  config.company = '英 选' # 默认公司名称
   config.expires_in = 1.hour # 短信验证过期时间
   config.default_interval = 1.day # 查询短信时的默认时间段: end_time - start_time
   config.store_sms_in_local = false # 是否存储SMS信息在本地: true or false
@@ -82,7 +80,7 @@ class User < ActiveRecord::Base
   #
   # Options:
   #   :class_name   自定义的Message类名称. 默认是 `SmartSMS::Message`
-  #   :messages     自定义的Message关联名称.  默认是 `:messages`.
+  #   :messages     自定义的Message关联名称.  默认是 `:sms_messages`.
   #
   has_sms_verification
 end

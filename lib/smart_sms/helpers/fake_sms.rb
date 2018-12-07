@@ -12,16 +12,15 @@ module SmartSMS
     #
     #   * mobile: mobile number
     #   * code:   verification code
-    #   * company: assigned company, format is【company】
     #
-    def build_fake_sms(mobile, code, company)
+    def build_fake_sms(mobile, code)
       {
         'sid'               => SecureRandom.uuid,
         'mobile'            => mobile,
         'send_time'         => Time.zone.now,
-        'text'              => "您的验证码是#{code}。如非本人操作，请忽略本短信【#{company}】",
+        'text'              => "您的验证码是#{code}。如非本人操作，请忽略本短信",
         'send_status'       => 'SUCCESS',
-        'report_status'     => 'UNKNOWN',
+        'report_status'     => 'FAKE',
         'fee'               => 1,
         'user_receive_time' => nil,
         'error_msg'         => nil

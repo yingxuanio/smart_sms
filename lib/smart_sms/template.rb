@@ -26,14 +26,14 @@ module SmartSMS
     # 创建新模板
     # 规则请参见: <http://www.yunpian.com/api/tpl.html>
     #
-    def create(tpl_content = '')
-      Request.post 'tpl/add.json', tpl_content: tpl_content
+    def create(options = {})
+      Request.post 'tpl/add.json', options
     end
 
     # 更新模板, 需指定id和content
     #
-    def update(tpl_id = '', tpl_content = '')
-      Request.post 'tpl/update.json', tpl_id: tpl_id, tpl_content: tpl_content
+    def update(tpl_id, options = {})
+      Request.post 'tpl/update.json', options.merge(tpl_id: tpl_id)
     end
 
     # 删除模板, 需指定id

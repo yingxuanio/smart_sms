@@ -18,26 +18,55 @@ module SmartSMS
       #
       # * method 如若要使用通用短信接口, 需要 :method => :general
       # * tpl_id 选择发送短信的模板, 默认是2
-      def deliver(phone, content, options = {})
-        if options[:method] == :general
-          Request.post 'sms/send.json', mobile: phone, text: content, extend: options[:extend]
+      def deliver(phone, content = nil, options = {})
+        if content
+          Request.post 'sms/single_send.json', mobile: phone, text: content, extend: options[:extend]
         else
-          options[:code] = content
-          message = parse_content options
+          code = SmartSMS::VerificationCode.random
+          options.merge("#code#": code)
+          tpl_value = options.to_param
           tpl_id = options[:tpl_id] || SmartSMS.config.template_id
-          Request.post 'sms/tpl_send.json', tpl_id: tpl_id, mobile: phone, tpl_value: message
+          Request.post 'sms/tpl_single_send.json', tpl_id: tpl_id, mobile: phone, tpl_value: tpl_value
+        end
+      end
+
+      # 用于校验短信验证码是否正确, 返回: true 或 false
+      #
+      def verify_code(phone, code)
+        sms = latest_message_for_phone(phone)
+        return false if sms.blank?
+        if SmartSMS.config.store_sms_in_local
+          sms.code == code.to_s
+        else
+          SmartSMS::VerificationCode.get_from_text(sms['text']) == code.to_s
         end
       end
 
       # 根据sid来查询短信记录
       #
       def find_by_sid(sid)
-        Request.post 'sms/get.json', sid: sid
+        Request.post 'sms/get_record.json', sid: sid
       end
 
       # 参见 `find_messages` 方法
       def find(options = {})
-        find_messages 'sms/get.json', options
+        find_messages 'sms/get_record.json', options
+      end
+
+      def latest_message_for_phone(phone)
+        end_time = Time.now
+        start_time = end_time - SmartSMS.config.expires_in
+        if SmartSMS.config.store_sms_in_local
+          SmartSMS::Message.where('mobile = ? and sent_at >= ? and sent_at <= ?', phone, start_time, end_time).last
+        else
+          result = find(
+            start_time: start_time,
+            end_time: end_time,
+            mobile: phone,
+            page_size: 1
+          )
+          result.first
+        end
       end
 
       # 查询黑名单词语, 用于预先测试可能无法通过审核的模板
@@ -68,7 +97,12 @@ module SmartSMS
         options[:start_time] = parse_time(options[:start_time])
         options[:page_num]  ||= SmartSMS.config.page_num
         options[:page_size] ||= SmartSMS.config.page_size
-        Request.post api, options
+        result = Request.post api, options
+        if result.is_a?(Array)
+          result
+        else
+          raise SmartSMS::ResponseError, result
+        end
       end
 
       # 解析日期时间
@@ -84,15 +118,6 @@ module SmartSMS
         end
       end
 
-      # 生成信息发送内容
-      #
-      def parse_content(options = {})
-        options[:code] ||= ''
-        options[:company] ||= SmartSMS.config.company
-        SmartSMS.config.template_value.map do |key|
-          "##{key}#=#{options[key]}"
-        end.join('&')
-      end
     end
   end
 end
