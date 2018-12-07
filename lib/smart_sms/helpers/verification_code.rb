@@ -13,7 +13,7 @@ module SmartSMS
     module_function
 
     REGISTERED_ALGORITHMS = [:short, :simple, :middle, :complex]
-    VERIFY_REGEXP = /(【.+】|[^a-zA-Z0-9\.\-\+_])/
+    VERIFY_REGEXP = /([a-zA-Z0-9\.\-\+_]{4,})/
 
     def random(algorithm = '')
       algorithm = SmartSMS.config.verification_code_algorithm if algorithm.blank?
@@ -41,7 +41,7 @@ module SmartSMS
     end
 
     def get_from_text(text)
-      text.gsub(VERIFY_REGEXP, '')
+      text.match(VERIFY_REGEXP)[0]
     end
   end
 end

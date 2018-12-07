@@ -23,8 +23,10 @@ module SmartSMS
           Request.post 'sms/single_send.json', mobile: phone, text: content, extend: options[:extend]
         else
           code = SmartSMS::VerificationCode.random
-          options.merge("#code#": code)
+          options["#code#"] = URI.encode(code)
+          options["#minutes#"] = URI.encode((SmartSMS.config.expires_in.to_i / 60).to_s)
           tpl_value = options.to_param
+          Rails.logger.info tpl_value
           tpl_id = options[:tpl_id] || SmartSMS.config.template_id
           Request.post 'sms/tpl_single_send.json', tpl_id: tpl_id, mobile: phone, tpl_value: tpl_value
         end
@@ -101,7 +103,7 @@ module SmartSMS
         if result.is_a?(Array)
           result
         else
-          raise SmartSMS::ResponseError, result
+          raise result
         end
       end
 
