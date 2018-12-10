@@ -56,7 +56,7 @@ module SmartSMS
       end
 
       def latest_message_for_phone(phone)
-        end_time = Time.now
+        end_time = Time.zone.now
         start_time = end_time - SmartSMS.config.expires_in
         if SmartSMS.config.store_sms_in_local
           SmartSMS::Message.where('mobile = ? and sent_at >= ? and sent_at <= ?', phone, start_time, end_time).last
